@@ -45,7 +45,9 @@ python manage.py migrate
 - Created REST_FRAMEWORK config in project settings.py and set TokenAuthentication as default for auth.
 - Created a test view for auth test
 - Wired up the URL conf for the users/login and test endpoints
+- Registration needs to return token like login does. Time for some tests probably...
 
 ## TODO - Things I Need To Come Back To
 
 [_] For the users/registers & users/login endpoints, username needs to become user to match the specs.
+[_] Will also need to verify that the headers in use match the specs
