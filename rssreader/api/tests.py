@@ -52,3 +52,51 @@ class UserRegisterTest(TestCase):
         str_content = str(resp.content, encoding='utf8')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_get_not_allowed(self):
+        url = reverse('user_register')
+        resp = self.client.get(url)
+        expected_content = {"detail": "Method \"GET\" not allowed."}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_head_not_allowed(self):
+        url = reverse('user_register')
+        resp = self.client.head(url)
+        expected_content = ''
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertEqual(str_content, expected_content)
+
+    def test_user_register_put_not_allowed(self):
+        url = reverse('user_register')
+        resp = self.client.put(url)
+        expected_content = {"detail": "Method \"PUT\" not allowed."}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_delete_not_allowed(self):
+        url = reverse('user_register')
+        resp = self.client.delete(url)
+        expected_content = {"detail": "Method \"DELETE\" not allowed."}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_trace_not_allowed(self):
+        url = reverse('user_register')
+        resp = self.client.trace(url)
+        expected_content = {"detail": "Method \"TRACE\" not allowed."}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_patch_not_allowed(self):
+        url = reverse('user_register')
+        resp = self.client.patch(url)
+        expected_content = {"detail": "Method \"PATCH\" not allowed."}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
