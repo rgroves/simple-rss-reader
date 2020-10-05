@@ -1,3 +1,4 @@
+import json
 from django.test import TestCase, Client
 from django.urls import reverse
 from rest_framework import status
@@ -21,3 +22,19 @@ class UserRegisterTest(TestCase):
         str_content = str(resp.content, encoding='utf8')
         self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
         self.assertRegex(str_content, expected_content_regex)
+
+    def test_user_register_must_provide_user(self):
+        url = reverse('user_register')
+        resp = self.client.post(url, {'username': '', 'password': 'te$ter#'})
+        expected_content = {"username":["This field may not be blank."]}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_must_provide_password(self):
+        url = reverse('user_register')
+        resp = self.client.post(url, {'username': 'tester', 'password': ''})
+        expected_content = {"password":["This field may not be blank."]}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
