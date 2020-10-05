@@ -119,3 +119,29 @@ class UserRegisterTest(TestCase):
         str_content = str(resp.content, encoding='utf8')
         self.assertEqual(resp.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
         self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+
+class UserLoginTest(TestCase):
+    """
+    Tests for user/login endpoint.
+    """
+    # initialize the APIClient app
+    client = Client()
+    endpoint = reverse('user_login')
+    post_data = {'username': 'test', 'password': 'myTe$tPw#'}
+
+    def setUp(self):
+        # Register a user for login tests.
+        register_url = reverse('user_register')
+        resp = self.client.post(register_url, self.post_data)
+
+    def test_user_login(self):
+        """
+        Test if user login is successful (for happy path).
+        """
+        resp = self.client.post(self.endpoint, self.post_data)
+        token_length = Token._meta.get_field('key').max_length
+        expected_content_regex = '{"access_token":"[0-9a-f]{' + str(token_length) + '}","user_id":[0-9]+}'
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_200_OK)
+        self.assertRegex(str_content, expected_content_regex)
