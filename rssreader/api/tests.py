@@ -38,3 +38,17 @@ class UserRegisterTest(TestCase):
         str_content = str(resp.content, encoding='utf8')
         self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
         self.assertJSONEqual(str_content, json.dumps(expected_content))
+
+    def test_user_register_fail_on_duplicate_user(self):
+        # Create user 'test'
+        url = reverse('user_register')
+        resp = self.client.post(url, {'username': 'test', 'password': 'myTe$tPw#'})
+        self.assertEqual(resp.status_code, status.HTTP_201_CREATED)
+
+        # Attempt to create a duplicate 'test' user
+        url = reverse('user_register')
+        resp = self.client.post(url, {'username': 'test', 'password': 'an0th3rPw#'})
+        expected_content = {"username":["A user with that username already exists."]}
+        str_content = str(resp.content, encoding='utf8')
+        self.assertEqual(resp.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertJSONEqual(str_content, json.dumps(expected_content))
