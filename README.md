@@ -32,3 +32,12 @@ django-admin startapp api
 ```
 python manage.py migrate
 ```
+
+## User Registration/Login
+
+- Created UserSerializer to handle serializing users on registration.
+- Wired up the URLconf for the user/register endpoint
+
+## TODO - Things I Need To Come Back To
+
+[_] In the users/registers endpoint, username needs to become user to match the specs.
