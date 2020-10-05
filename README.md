@@ -36,8 +36,16 @@ python manage.py migrate
 ## User Registration/Login
 
 - Created UserSerializer to handle serializing users on registration.
-- Wired up the URLconf for the user/register endpoint
+- Wired up the URLconf for the users/register endpoint
+- Added rest_framework.authtoken to INSTALLED_APPS in project settings.py
+  - Run migrate:
+    ```
+    python manage.py migrate
+    ```
+- Created REST_FRAMEWORK config in project settings.py and set TokenAuthentication as default for auth.
+- Created a test view for auth test
+- Wired up the URL conf for the users/login and test endpoints
 
 ## TODO - Things I Need To Come Back To
 
-[_] In the users/registers endpoint, username needs to become user to match the specs.
+[_] For the users/registers & users/login endpoints, username needs to become user to match the specs.
