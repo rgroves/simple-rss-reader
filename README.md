@@ -62,6 +62,9 @@ pwd=testing###42
 post_data=("username=$usr password=$pwd")
 echo Registering: $post_data
 http --verbose post http://127.0.0.1:8000/users/register $post_data
+
+auth="Authorization:Token 2a397c3a4ad0df9e0d417c02e13f2cf7bd096ab6"
+http --verbose post http://127.0.0.1:8000/feeds/add url="https://example.com/rss/$(date +%y%d%H%M%S)" "$auth"
 ```
 
 ### users/register: Register A User
@@ -71,6 +74,10 @@ http --verbose post http://127.0.0.1:8000/users/register username="user\_\$(date
 ### users/login: Log A User In
 
 http --verbose post http://127.0.0.1:8000/users/login username="cacciaresi" password="cacciaresi"
+
+### users/login: Subscribe To An RSS Feed
+
+http --verbose post http://127.0.0.1:8000/feeds/add url="https://example.com/rss/$(date +%y%d%H%M%S)" 'Authorization:Token 2a397c3a4ad0df9e0d417c02e13f2cf7bd096ab6'
 
 ---
 
@@ -114,8 +121,9 @@ http --verbose post http://127.0.0.1:8000/users/login username="cacciaresi" pass
   - Depending on how refreshing should work, may need to do something special if one users refresh of a feed should not affect another user with tha feed.
 - Articles will be many-to-one with a Feed, and will have a many-to-many relations ship with Users for keeping track of who read the articles.
 - When a feed is first introduced something should fetch the feed data and populate articles - will need to decide if this will be done inline or as a separate process
+- Created the Feed model, serializer, view, and exposed feeds/add endpoint.
 
-Going to start by working on the Feed model.
+- Need tests for feeds/add
 
 ---
 
