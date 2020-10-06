@@ -74,9 +74,55 @@ http --verbose post http://127.0.0.1:8000/users/login username="cacciaresi" pass
 
 ---
 
+## RSS Reader Data Design
+
+- Feed Data
+
+  - ID (pk)
+  - URL (uk)
+  - Users (many-to-many with Users)
+  - Title
+
+- Feed Actions
+
+  - Add a feed
+  - Delete a feed
+  - Get list of all feeds
+  - Get list of articles belonging to a feed
+  - Refresh a feed
+
+- Article Data
+
+  - ID (pk)
+  - URL (uk)
+  - Feed (fk, many-to-one with Feed)
+  - Read By (many-to-many with Users)
+  - Title
+  - Summary
+  - Content
+  - Date
+  - Loaded
+
+- Article Actions
+  - Mark article read/unread
+
+### Thoughts
+
+- A naive implementation might just let users add to a feed and keep a one-to-many link between Users and Feeds.
+  - This would end up duplicating feeds in the table, e.g. if 5 users all added the same feed they'd exist in the Feeds table once per user.
+- Since a feed can belong to many users and a user can have many feeds, it could (probably should) be modeled as a many-to-many relationship.
+  - Depending on how refreshing should work, may need to do something special if one users refresh of a feed should not affect another user with tha feed.
+- Articles will be many-to-one with a Feed, and will have a many-to-many relations ship with Users for keeping track of who read the articles.
+- When a feed is first introduced something should fetch the feed data and populate articles - will need to decide if this will be done inline or as a separate process
+
+Going to start by working on the Feed model.
+
+---
+
 ## TODO - Things I Need To Come Back To
 
 - [_] For the users/registers & users/login endpoints, username needs to become user to match the specs.
 - [_] Will also need to verify that the headers in use match the specs
 - [_] Is there a better way to do the regex based assertion testing (in api/tests.py)
+- [_] Should come back to refactor/reorganize tests (separate files for each endpoint?)
 - [_] Tests between register and login endpoints can probably be refactored to eliminate duplication for common tests.
