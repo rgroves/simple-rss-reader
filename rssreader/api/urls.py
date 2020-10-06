@@ -7,4 +7,5 @@ urlpatterns = [
     path('users/login', views.UserLogin.as_view(), name='user_login'),
     path('test', views.TestView.as_view(), name='test'),
     path('feeds/add', views.FeedCreate.as_view(), name='feeds_add'),
+    path('feeds', views.FeedList.as_view(), name='feeds_list'),
 ]

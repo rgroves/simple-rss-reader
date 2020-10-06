@@ -60,3 +60,11 @@ class FeedCreate(generics.CreateAPIView):
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+class FeedList(generics.ListAPIView):
+    serializer_class = FeedSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        user = self.get_serializer_context()['request'].user
+        return Feed.objects.filter(users=user.id)
