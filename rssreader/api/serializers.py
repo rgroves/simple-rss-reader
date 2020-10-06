@@ -1,5 +1,8 @@
 from django.contrib.auth.models import User
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
+
+from api.models import Feed
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -15,3 +18,31 @@ class UserSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         return user
+
+class FeedSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Feed
+        fields = ('url',)
+        # Removing the url unique validator, handled with special
+        # logic in create
+        extra_kwargs = {
+            'url': {'validators': []},
+        }
+
+    def create(self, validated_data):
+        user_id = self.context['user_id']
+
+        try:
+            feed = Feed.objects.get(**validated_data)
+        except ObjectDoesNotExist:
+            feed = Feed.objects.create(**validated_data)
+
+            # TODO need to fetch feed title, for now slug with url
+
+            feed.title = feed.url
+            feed.save()
+
+        # Add the user requesting the feed regardless if it already exists.
+        feed.users.add(user_id)
+
+        return feed
