@@ -31,15 +31,13 @@ class FeedSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user_id = self.context['user_id']
+        feed_title = self.context['feed_title']
 
         try:
             feed = Feed.objects.get(**validated_data)
         except ObjectDoesNotExist:
             feed = Feed.objects.create(**validated_data)
-
-            # TODO need to fetch feed title, for now slug with url
-
-            feed.title = feed.url
+            feed.title = feed_title
             feed.save()
 
         # Add the user requesting the feed regardless if it already exists.

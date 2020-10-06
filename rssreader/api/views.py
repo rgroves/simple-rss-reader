@@ -1,3 +1,5 @@
+import feedparser
+
 from django.contrib.auth.models import User
 from django.shortcuts import render
 from rest_framework import generics, status
@@ -55,8 +57,17 @@ class FeedCreate(generics.CreateAPIView):
     permission_classes = (IsAuthenticated,)
 
     def create(self, request, *args, **kwargs):
+        # TODO Need error handling (what if bad url or other error)
+        url = request.data['url']
+        d = feedparser.parse(url)
         user = self.get_serializer_context()['request'].user
-        serializer = self.get_serializer(data=request.data, context={'user_id': user.id}, partial=True)
+
+        context = {
+            'user_id': user.id,
+            'feed_title': d['feed']['title'],
+        }
+
+        serializer = self.get_serializer(data=request.data, context=context, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
