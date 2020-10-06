@@ -79,6 +79,12 @@ http --verbose post http://127.0.0.1:8000/users/login username="cacciaresi" pass
 
 http --verbose post http://127.0.0.1:8000/feeds/add url="https://example.com/rss/$(date +%y%d%H%M%S)" 'Authorization:Token 2a397c3a4ad0df9e0d417c02e13f2cf7bd096ab6'
 
+### users/login: Reed The Articles Of A Feed
+
+#### List A User's Feeds
+
+http --verbose get http://127.0.0.1:8000/feeds 'Authorization:Token 2a397c3a4ad0df9e0d417c02e13f2cf7bd096ab6'
+
 ---
 
 ## RSS Reader Data Design
@@ -121,9 +127,11 @@ http --verbose post http://127.0.0.1:8000/feeds/add url="https://example.com/rss
   - Depending on how refreshing should work, may need to do something special if one users refresh of a feed should not affect another user with tha feed.
 - Articles will be many-to-one with a Feed, and will have a many-to-many relations ship with Users for keeping track of who read the articles.
 - When a feed is first introduced something should fetch the feed data and populate articles - will need to decide if this will be done inline or as a separate process
-- Created the Feed model, serializer, view, and exposed feeds/add endpoint.
+- Created the Feed model, serializer, view, and exposed the feeds/add endpoint.
+- Created the list view for the feeds endpoint.
 
-- Need tests for feeds/add
+- Moved additional tests to TODO list for now.
+  Want to work on fetching the rss and dealing with it.
 
 ---
 
@@ -134,3 +142,5 @@ http --verbose post http://127.0.0.1:8000/feeds/add url="https://example.com/rss
 - [_] Is there a better way to do the regex based assertion testing (in api/tests.py)
 - [_] Should come back to refactor/reorganize tests (separate files for each endpoint?)
 - [_] Tests between register and login endpoints can probably be refactored to eliminate duplication for common tests.
+- [_] The feeds/add endpoit doesn't notify if user is already subscribed to a feed; just silently ignores that they requested to add the feed again.
+- [_] Need tests for feeds, feeds/add
