@@ -22,7 +22,7 @@ class UserSerializer(serializers.ModelSerializer):
 class FeedSerializer(serializers.ModelSerializer):
     class Meta:
         model = Feed
-        fields = ('url',)
+        fields = ('id', 'title', 'url')
         # Removing the url unique validator, handled with special
         # logic in create
         extra_kwargs = {

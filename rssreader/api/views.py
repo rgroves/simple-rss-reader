@@ -56,7 +56,7 @@ class FeedCreate(generics.CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         user = self.get_serializer_context()['request'].user
-        serializer = self.get_serializer(data=request.data, context={'user_id': user.id})
+        serializer = self.get_serializer(data=request.data, context={'user_id': user.id}, partial=True)
         serializer.is_valid(raise_exception=True)
         self.perform_create(serializer)
         return Response(serializer.data, status=status.HTTP_201_CREATED)
