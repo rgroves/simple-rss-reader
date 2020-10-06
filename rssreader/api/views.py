@@ -9,7 +9,7 @@ from api.serializers import UserSerializer
 from rest_framework.views import APIView
 from rest_framework.response import Response
 
-# Define the view to be used with  the user creation (registration) endpoint.
+# Define the view to be used with the user creation (registration) endpoint.
 class UserCreate(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -22,7 +22,7 @@ class UserCreate(generics.CreateAPIView):
         # Serialize incoming data
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        # Create user, get user'stoken and send response.
+        # Create user, get user's token and send response.
         self.perform_create(serializer)
         token = Token.objects.create(user=serializer.instance)
         return Response({'access_token': token.key}, status=status.HTTP_201_CREATED)
