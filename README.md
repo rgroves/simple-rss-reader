@@ -129,9 +129,9 @@ http --verbose get http://127.0.0.1:8000/feeds 'Authorization:Token 2a397c3a4ad0
 - When a feed is first introduced something should fetch the feed data and populate articles - will need to decide if this will be done inline or as a separate process
 - Created the Feed model, serializer, view, and exposed the feeds/add endpoint.
 - Created the list view for the feeds endpoint.
+- Installed feedparser and added quick logic to get the rss feed title in the feed create view.
 
-- Moved additional tests to TODO list for now.
-  Want to work on fetching the rss and dealing with it.
+- Moved additional tests and error handling to TODO list for now.
 
 ---
 
@@ -144,3 +144,4 @@ http --verbose get http://127.0.0.1:8000/feeds 'Authorization:Token 2a397c3a4ad0
 - [_] Tests between register and login endpoints can probably be refactored to eliminate duplication for common tests.
 - [_] The feeds/add endpoit doesn't notify if user is already subscribed to a feed; just silently ignores that they requested to add the feed again.
 - [_] Need tests for feeds, feeds/add
+- [_] Need error handling around rss fetch in feeds/add
