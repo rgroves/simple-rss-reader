@@ -4,7 +4,9 @@ from rest_framework import generics, status
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from api.serializers import UserSerializer
+
+from api.models import Feed
+from api.serializers import UserSerializer, FeedSerializer
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
@@ -46,3 +48,15 @@ class TestView(APIView):
     def get(self, request):
         content = {'message': 'Just a test.'}
         return Response(content)
+
+class FeedCreate(generics.CreateAPIView):
+    queryset = Feed.objects.all()
+    serializer_class = FeedSerializer
+    permission_classes = (IsAuthenticated,)
+
+    def create(self, request, *args, **kwargs):
+        user = self.get_serializer_context()['request'].user
+        serializer = self.get_serializer(data=request.data, context={'user_id': user.id})
+        serializer.is_valid(raise_exception=True)
+        self.perform_create(serializer)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
